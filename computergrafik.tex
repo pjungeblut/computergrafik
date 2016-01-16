@@ -5,16 +5,34 @@
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 
+% Abstand zwischen Punkten und Satzanfängen.
+\frenchspacing
+
+% Farben, vor allem ein Blau für Definitionen.
+\usepackage{color}
+
+% Ein Befehl zur Einführen von Begriffen.
+\newcommand{\introduce}[1]{\textcolor{blue}{#1}}
+
+% Titel, Autor und Datum.
 \title{KIT Computergrafik, WS 15/16}
 \author{Paul Jungeblut}
 \date{\today}
 
 \begin{document}
 
+% Eine Titelseite.
 \maketitle
 \newpage
 
+% Eine Seite mit Inhaltverzeichnis und kleinem Disclaimer.
 \tableofcontents
+\vfill
+Dieses Skript ist inoffiziell zur Vorlesung Computergrafik am KIT im Wintersemester 2015/2016 entstanden.
+Dieses Skript erhebt keinen Anspruch auf Vollständigkeit und Korrektheit.
 \newpage
+
+% Ein separates Dokument pro Kapitel.
+\input{chapter1/chapter1.tex}
 
 \end{document}

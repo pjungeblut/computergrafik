@@ -1,0 +1,36 @@
+\chapter{Bilder, Farbe und Perzeption}
+In der Computergrafik geht es um die Erzeugung und Manipulation von Bildern.
+Diese Bilder sind meiste 2D Arrays aus farbigen Pixeln.
+Der Speicher, in dem die Farbe mit drei Werten für rot, grün und blau gespeichert wird, heißt \introduce{Framebuffer}.
+Heutzutage sind 8 Bit pro Farbe in einem Framebuffer üblich.
+Steht weniger zur Verfügung, müssen fehlende Farben durch Anordnung verfügbarer Farben nachgebildet werden.
+Sind die Pixel ausreichend klein, werden so Mischfarben wahrgenommen.
+
+\section{Transferfunktion}
+Höhere RGB-Werte bedeuten eine hellere Farbe.
+Wie hell genau eine Farbe erscheint, wird durch eine \introduce{Transferfunktion $f$} beschrieben.
+Man kann die Transferfunktion für ein Graustufenbild oder per Farbkanal betrachten.
+\[
+	f : \left[0, N\right] \to \left[I_{min}, I_{max}\right]
+\]
+Dabei bildet $f$ vom Wert des Pixels auf eine Helligkeit zwischen der minimalen und maximalen Displayhelligkeit $I_{min}$ und $I_{max}$ ab.
+Sie hängt von den physikalischen Eigenschaften des Displays ab.
+
+Die maximale Helligkeit $I_{max}$ gibt an, wie hell ein Pixel sein kann.
+Bei LCDs beträgt sie meist weniger als $10\%$ der Hintergrundbeleuchtung des Displays.
+Die minimale Helliglkeit $I_{min}$ ist die Menge Licht, die für ein schwarzes Pixel emmitiert wird.
+
+Neben dem vom Display emmitierten Licht, reflektiert auch noch Umgebungslicht mit Intensität $k$ an der Oberfläche.
+Dieses hat einen großen Einfluss auf den Kontrast, der am Bildschirm wahrgenommen werden kann.
+Der \introduce{Dynamikumfang}
+\[
+	R_d := \frac{I_{max} + k}{I_{min} + k}
+\]
+beschreibt den maximalen Kontrast des Displays.
+
+Die Transferfunktion sollte so ausfallen, dass aufeinander folgende Pixelwerte keinen sichtbaren Helligkeitsunterschied haben.
+Ist diese Forderung nicht erfüllt, können Bänder auf glatten Bildbereichen erscheinen.
+Menschen können einen Helligkeitsunterschied von etwa 2\% wahrnehmen.
+In dunklen Bereichen werden also kleinere Schritte der Transferfunktion benötigt.
+
+\subsection{Mögliche Transferfunktionen}
