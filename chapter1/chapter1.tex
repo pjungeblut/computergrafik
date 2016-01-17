@@ -33,4 +33,30 @@ Ist diese Forderung nicht erfüllt, können Bänder auf glatten Bildbereichen er
 Menschen können einen Helligkeitsunterschied von etwa 2\% wahrnehmen.
 In dunklen Bereichen werden also kleinere Schritte der Transferfunktion benötigt.
 
-\subsection{Mögliche Transferfunktionen}
+\subsection{Quantisierung}
+Die Transferfunktion kann verschieden quantisiert sein.
+Die verschiedenen Möglichkeiten unterscheiden sich dabei in der größe der Helligkeitsschritte zwischen aufeinander folgenden Farbwerten.
+
+Bei einer \introduce{linearen Quantisierung} (gleich große Helligkeitsschritte), muss jeder Schritt kleiner als 2\% von $I_{min}$ betragen.
+Um Helligkeiten bis $I_{max}$ darzustellen werden
+\[
+	\frac{I_{max} - I_{min}}{0.02 \cdot I_{min}}
+\]
+Schritte benötigt.
+Bei LCDs mit Dynamikumfang 100:1 sind dies etwa 5000 Schritte.
+Dies würde 12-13 Bit pro Farbkanal erfordern.
+Vorteil der linearen Quantisierung ist jedoch die einfache Arithmetik mit Pixelwerten.
+
+Alternativ könnte die Transferfunktion exponentiell quantisiert sein, mit genau 2\% zwischen zwei Pixelwerten.
+Bei einer \introduce{exponentiellen Quantisierung} ist $0 \mapsto I_{min}$, $1 \mapsto 1.02 \cdot I_{min}$, $2 \mapsto 1.02^2 \cdot I_{min}$, usw.
+Da $\log_{10} 1.02 \approx \frac{1}{120}$, werden ca. 120 Schritte für eine Verzehnfachung der Helligkeit benötigt.
+In diesem Fall reichen also 8 Bit gerade aus, um die 240 Schritte zu ermöglichen, die ein LCD mit Dynamikumfang 100:1 bräuchte.
+
+Als Approximation der exponentiallen Quantisierung wird in der Praxis häufig eine \introduce{potenzfunktion basierte Quantisierung} eingesetzt.
+\[
+	I(n) = \left(\frac{n}{N}\right)^\gamma \cdot I_{max}
+\]
+Der Exponent $\gamma$ muss in diesem Fall immer mit angegeben werden.
+Ist $\gamma = 1$ hat man eine lineare Quantisierung.
+
+\subsection{$\gamma$-Korrektur}
