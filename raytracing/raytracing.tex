@@ -1,0 +1,45 @@
+\chapter{Ray Tracing}
+Die Idee beim \introduce{Ray Tracing} ist es, für jeden Pixel, alle Objekte zu finden, die diesen Pixel beeinflussen.
+Anhand all dieser Objekte wird die Pixelfarbe bestimmt.
+Dazu wird vom Rückwärtslichttransport ausgegangen.
+Man startet an der Kamera und sucht alle Pfade, auf denen das Licht dort hin gelangt.
+Dabei wird angenommen, dass der Lichttransport den Gesetzen der geometrischen Optik folgt.
+
+\section{Abtastung}
+Ein \introduce{Rasterbild} ist eine äquidistante Abtastung eines Bildsignals.
+Das Bildsignal wird also vereinfachend als stückweise konstante Funktion aufgefasst.
+Die bringt Probleme wie \introduce{Aliasing} oder den \introduce{Moiré-Effekt} mit sich.
+
+\begin{Theorem}[\textsc{Nyquist}-\textsc{Shannon}-Abtasttheorem]
+	Ein kontinuierliches, bandbegrenztes Signal mit einer maximalen Frequenz $f_{max}$ muss mit einer Frequenz echt größer als $2 f_{max}$ abgetastet werden, damit aus dem diskreten Signal das Ursprungssignal exakt rekostruiert werden kann.
+\end{Theorem}
+
+Ist die Abtastfrequenz zu gering, kommt es zu Aliasing.
+Ein möglicher Lösungsansatz ist eine Vorfilterung des Signals, bei der hohe Frequenzen entfernt werden.
+Dies ist jedoch im allgemeinen Fall nicht möglich.
+Eine andere Möglichkeit ist eine \introduce{Überabtastung} mit anschließender Filterung.
+
+\section{Lochkamera}
+Am einfachsten zur Bildsynthese ist das Modell der Lochkamera.
+Sie ist definiert durch die Position ihrer Öffnung und der Bildebene.
+Da keine Linse verwendet wird, hat sie unbeschränkte Schärfentiefe.
+
+Eine \introduce{virtuelle Kamera} ist definiert durch ihre Position und Blickrichtung, sowie die Orientierung der Vertikalen Achse.
+Dazu die Breite und Höhe der Bildebene und ihr Abstand \emph{vor} der Kamera.
+
+Bei der Bildsynthese kann \introduce{objektbasiert} oder \introduce{bildbasiert} vorgegangen werden.
+
+Beim objektbasierten Rendern werden für jedes Objekt alle Pixel bestimmt, die es überdeckt.
+Dann wird die Farbe dieser Pixel ermittelt.
+
+Beim bildbasierten Rendern werden für jeden Pixel alle an dieser Stelle sichtbaren Objekte bestimmt.
+Daraus wird die Pixelfarbe ermittelt.
+
+\section{Ray Tracing}
+Ray Tracing besteht aus drei Schritten, die in dieser Reihenfolge ausgeführt werden.
+\begin{enumerate}
+	\item \introduce{Ray Generation} Für jeden Pixel wird ein Strahl von der Kamera durch diesen Pixel erzeugt.
+	\item \introduce{Ray Intersection} Für jeden Strahl wird das Objekt gefunden, das die Kamera an diesem Pixel sieht.
+	Es ist das Objekt, das diesen Strahl schneidet und dessen Schnittpunkt am nächsten an der Kamera liegt.
+	\item \introduce{Shading} Farbe und Schattierung dieses Objekts an dieser Stelle wird berechnet.
+\end{enumerate}

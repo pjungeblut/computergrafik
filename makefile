@@ -5,5 +5,5 @@ all:
 
 clean:
 	rm -f *~ .*~ *.aux *.log *.backup *.out *.backup *.bbl *.blg *.brf \
-			*.idx *.ilg *.ind *.toc *.fls
+			*.idx *.ilg *.ind *.toc *.fls *.thm
 			

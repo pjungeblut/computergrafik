@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass{scrreprt}
 
 % Font- und Inputencoding. Deutsche Sprache.
 \usepackage[T1]{fontenc}
@@ -18,7 +18,9 @@
 \usepackage{siunitx}
 
 % Mathe.
+\usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage[standard]{ntheorem}
 
 % Ein Befehl zur Einführen von Begriffen.
 \newcommand{\introduce}[1]{\textcolor{blue}{#1}}
@@ -50,6 +52,8 @@ Die Vorlesung wurde von Prof. Dr. Carsten Dachsbacher gehalten und dieses Skript
 \newpage
 
 % Ein separates Dokument pro Kapitel.
-\input{chapter1/chapter1.tex}
+\input{colorsPerception/colorsPerception.tex}
+\input{geometry/geometry.tex}
+\input{raytracing/raytracing.tex}
 
 \end{document}
