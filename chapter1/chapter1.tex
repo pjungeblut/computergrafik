@@ -70,4 +70,55 @@ In der Computergrafik wird ein Pixelwert $\alpha$ aber üblicherweise in einem l
 Bei der Darstellung will man, dass ein doppelter Wert doppelte Helligkeit bedeutet.
 Pixelwerte werden daher \emph{direkt vor der Darstellung} einer \introduce{$\gamma$-Korrektur} unterzogen.
 Damit $I(n) \propto \alpha$ ist, wird $\alpha \propto \alpha^{\frac{1}{\gamma}}$ verwendet.
-Diese Korrektur wird unabhängig für jede Primärfarbe durchgeführt.
+Diese Korrektur wird unabhängig für jede Primärfarbe durchgeführt
+
+\section{$\alpha$-Kanal}
+Oft werden Bilder 32 Bit pro Pixel kodiert.
+Ein Beispiel ist das RGBA-Format, wo neben den Primärfarben rot, grün und blau zusätzlich 8 Bit für einen \introduce{$\alpha$-Kanal} zur Verfügung stehen.
+Der $\alpha$-Wert gibt die Opazität (Gegenteil von Transparenz) an.
+Die Verwendung eines Alphakanals erlaubt es, Details von der Geometrie in die Textur zu verlagern und so das Rendern der Szene zu beschleunigen.
+
+\section{Licht}
+Licht ist elektoromagnetische Strahlung.
+Eine elektormagnetische Welle hat eine Wellenlänge $\lambda$ und eine Frequenz $\nu = \frac{c}{\lambda}$.
+Jede solche Wellenlänge repräsentiert eine \introduce{Spektralfarbe}.
+Sichtbares Licht hat Wellenlängen zwischen \SI{380}{\nano\meter}-\SI{700}{\nano\meter}.
+Licht ist in der Regel zusammengesetzt aus vielen verschiedenen Wellenlängen, jede mit einer bestimmten Intensität. $P(\lambda)$ ist die \introduce{Strahlungsleistung} der Wellenlänge $\lambda$.
+
+Das menschliche Auge kann die spektrale Zusammensetzung von Licht nicht erfassen.
+Es passt sich zudem den äußeren (physikalischen) Umständen an.
+Als Rezeptoren dienen \introduce{Stäbchen} und \introduce{Zapfen}.
+Die ca. 120 Millionen Stäbchen sind sehr lichtempfindlich und eignen sich für monochromatisches Nachtsehen.
+Mit ca. 6-7 Millionen Zapfen ist trichromatisches Tagsehen möglich.
+Es gibt drei Arten von Zapfen, die sich in ihrer Empfindlichkeit bezüglich verschiedener Lichtsprektren unterscheiden:
+S-Zapfen (7\%) entsprechen dem blauen Licht, M-Zapfen (37\%)dem (gelb-)grünen und L-Zapfen (56\%) dem (orange-)roten Licht.
+
+\subsection{Wahrnehmung von Licht}
+Die Wahrnehmung von Licht erfolgt anhand des Tripels $(s,m,l)$ mit
+\[
+	s = \int S(\lambda)P(\lambda) \intd\lambda \text{,} \qquad
+	m = \int M(\lambda)P(\lambda) \intd\lambda \text{,} \qquad
+	l = \int L(\lambda)P(\lambda) \intd\lambda \text{.}
+\]
+Daraus folgt, dass es unterschiedliche Spektren mit unterschiedlichen Wellenlängen und Intensitäten gibt, die zur gleichen Wahrnehmung führen.
+Diesen Effekt bezeichnet man als \introduce{Metamerismus}.
+Der Metamerismus ist von elementarer Bedeutung in der Computergrafik, denn so kann ein Monitor mit drei Primärfarben den gleichen Eindruck vermitteln wie ein komplexes Spektrum.
+
+\section{Farbräume}
+Grundsätzlich kann zwischen \introduce{additiver} und \introduce{subtraktiver Farbmischung} unterschieden werden.
+
+Bei additiver Farbmischung sind Rot, Grün und Blau die drei Primärfarben.
+Die Farkombination entsteht durch \emph{Addition} der Spektren.
+
+Bei der subtraktiven Farbmischung sind die Primärfarben Cyan, Gelb und Magenta.
+Die Farbkombination entsteht durch \emph{Multiplikation} der Spektren.
+
+\subsection{Graßmannsche Gesetze}
+\begin{itemize}
+	\item Farbe ist eine dreidimensionale Größe (\zB rot/grün/blau oder Farbton/Sättigung/Helligkeit).
+	\item \introduce{Superpositionsprinzip}:
+	Die Intensität einer additiv gemischten Farbe entspricht der Summe der Intensitäten der Ausgangsfarben.
+	\item Der Farbton einer additiven Mischfarbe hängt nur vom Farbeindruck der Ausgangsfarben ab und nicht von deren Spektren.
+	Auf die spektrale Zusammensetzung kann nicht rückgeschlossen werden.
+	Beim Addieren von Spektren können einzelne Spektren also durch Metamere ersetzt werden, ohne dass sich der Farbeindruck ändert.
+\end{itemize}
