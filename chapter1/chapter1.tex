@@ -60,3 +60,14 @@ Der Exponent $\gamma$ muss in diesem Fall immer mit angegeben werden.
 Ist $\gamma = 1$ hat man eine lineare Quantisierung.
 
 \subsection{$\gamma$-Korrektur}
+In diesem Abschnitt gelten vereinfachend die Idealwerte $I_{min} = k = 0$ und $I_{max} = 1$.
+Mit insgesamt $N$ Schritten ($N = 256$ bei $8$ Bit) wird ein Pixelwert $n$ auf die Intensität $I(n)$ abgebildet.
+\[
+	I(n) \propto \left(\frac{n}{N}\right)^\gamma
+\]
+Der $\gamma$-Wert charakterisiert das Display.
+In der Computergrafik wird ein Pixelwert $\alpha$ aber üblicherweise in einem linearen Raum berechnet.
+Bei der Darstellung will man, dass ein doppelter Wert doppelte Helligkeit bedeutet.
+Pixelwerte werden daher \emph{direkt vor der Darstellung} einer \introduce{$\gamma$-Korrektur} unterzogen.
+Damit $I(n) \propto \alpha$ ist, wird $\alpha \propto \alpha^{\frac{1}{\gamma}}$ verwendet.
+Diese Korrektur wird unabhängig für jede Primärfarbe durchgeführt.
