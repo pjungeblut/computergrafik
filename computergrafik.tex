@@ -49,11 +49,14 @@
 
 \begin{document}
 
-% Eine Titelseite.
+% Römische Nummerierung vor dem eigentlichen Inhalt.
+\pagenumbering{roman}
+
+% Titelseite.
 \maketitle
 \newpage
 
-% Eine Seite mit Inhaltverzeichnis und kleinem Disclaimer.
+% Inhaltverzeichnis und kleinem Disclaimer.
 \tableofcontents
 \vfill
 Dieses Skript ist inoffiziell zur Vorlesung Computergrafik am KIT im Wintersemester 2015/2016 entstanden.
@@ -61,6 +64,10 @@ Es erhebt keinen Anspruch auf Vollständigkeit und Korrektheit.
 
 Die Vorlesung wurde von Prof. Dr. Carsten Dachsbacher gehalten und das Skript orientiert sich stark an seinen Folien.
 \newpage
+
+% Arabische Nummerierung für den eigentlichen Inhalt. Start bei Seite 1.
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
 % Ein separates Dokument pro Kapitel.
 \input{colorsPerception/colorsPerception.tex}
