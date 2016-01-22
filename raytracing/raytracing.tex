@@ -65,5 +65,69 @@ Typischerweise ist das Sichtfeld symmetrisch, es gilt also $l = -r$ und $t = -b$
 Das Verhältnis aus der Breite zur Höhe des Bildschirms heißt \introduce{Aspect Ratio}.
 
 \section{Ray Intersection}
+Geometrische Objekte können auf drei verschiedene Arten beschrieben werden:
+\begin{itemize}
+	\item \introduce{Parameterdarstellung}
+	Einsetzen aller gültigen Parameterwerte liefert alle Punkte des Objekts.
+	\item \introduce{Explizite Darstellung}
+	Es ist eine Funktion gegeben, die an jeder Position beschreibt, ob das Objekt an dieser Position ist.
+	\item \introduce{Implizite Darstellung}
+	Alle Punkte des Objekts bilden die Lösungsmenge eines Systems von Gleichungen.
+\end{itemize}
+
+\subsection{Kugelschnitt}
+Alle Punkte auf der Kugeloberfläche $K$ haben Abstand $r$ vom Mittelpunkt $c = (c_x, c_y, c_z)$.
+Die implizite Darstellung der Kugel ist
+\[
+	K = \{(x, y, z) \mid \norm{(x - c_x, y - c_y, z - c_z)} = r\} \text{.}
+\]
+Sei $r(t) = e + td$ ein mit $t \in \mathbb{R}_+$ parametriesierter Strahl.
+Für den Schnittpunkt aus Kugel und Strahl ergibt sich:
+\begin{align*}
+	0 &= \norm{r(t) - c}^2 - r^2 \\
+		&= \norm{e + td - c}^2 - r^2 \\
+		&= \dotproduct{e + td - c}{e + td - c} - r^2 \\
+		&= \underbrace{\dotproduct{e - c}{e - c} - r^2}_c + \underbrace{2 \dotproduct{td}{e - c}}_{b \cdot t} + \underbrace{t^2 \dotproduct{d}{d}}_{a \cdot t^2}
+\end{align*}
+Mit der Mitternachtsformel
+\[
+	t_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\]
+lassen sich nun die Parameter $t_1$ und $t_2$ bestimmen.
+\[
+	D = b^2 - 4ac
+\]
+heißt ist die Diskriminante.
+Ist $D < 0$, gibt es keinen Schnittpunkt.
+Ist sie gleich $0$, gibt es genau einen Schnittpunkt bei $r(t_1) = r(t_2)$.
+Ist $D$ positiv, gibt es bei $r(t_1)$ und $r(t_2)$ jeweils einen Schnittpunkt.
+Die Parameter $t_1$ und $t_2$ können kleiner als $0$ sein.
+In diesem Fall liegt der Schnittpunkt hinter der Kamera und sollte nicht betrachtet werden.
+
+\subsection{Ebenenschnitt}
+Eine Ebene im $\mathbb{R}^3$ hat die implizite Darstellung
+\[
+	E = \{(x, y, z) \mid ax + by + cz + d = 0, \quad
+	a, b, c, d \in \mathbb{R}, \quad
+	a, b, c, \neq 0\} \text{.}
+\]
+Mit zwei nicht kollinearen Vektoren in der Ebene lässt sich die Normale $n$ berechnen.
+Sei $r(t) = e + td$ ein Strahl mit $\norm{d} = 1$.
+Dazu sei $\dotproduct{x}{n} - d = 0$ mit $\norm{n}$ die Ebene in Hesse-Normalform.
+\begin{align*}
+	0 &= \dotproduct{e + td}{n} - d \\
+	  &= \dotproduct{e}{n} + t \dotproduct{d}{n} - d
+\end{align*}
+Damit folgt für den Parameter $t$:
+\[
+	t = \frac{d - \dotproduct{e}{n}}{\dotproduct{d}{n}}
+\]
+Fall $\dotproduct{d}{n} = 0$ gilt, sind Strahl und Ebene parallel und es exitiert kein Schnittpunkt.
+Andernfalls schneiden sich Strahl und Ebene im Punkt $r(t)$.
+Wenn $t < 0$ ist, liegt der Schnittpunkt hinter der Kamera und sollte ignoriert werden.
+
+\subsection{Dreiecksschnitt}
+Um einen Schintt zwischen einem Strahl und einem Dreieck zu berechnen, muss zuerst ein Schnittpunkt des Strahl mit der vom Dreieck aufgespannten Ebene gefunden werden.
+Die Koordianten des Schnittpunktes können dann in baryzentrische Koordinaten überführt und auf Positivität überprüft werden.
 
 \section{Shading}
