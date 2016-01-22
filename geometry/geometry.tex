@@ -1,1 +1,115 @@
 \chapter{Analytische Geometrie}
+Dieses Kapitel gibt einen sehr groben Überlick über einige Konzepte aus der anlytischen Geometrie, die in der Computergrafik wichtig sind.
+Alles ist sehr informell und nur als Wiederholung bekannten Inhalts gedacht.
+
+\section{Vektoren und Punkte}
+Ein \introduce{Vektor} besteht aus einer Richtung und einer Länge.
+Vektoren werden genutzt, um Verschiebungen oder Richtungen anzugeben.
+Ein \introduce{Ortsvektor} ist der Vektor vom Ursprung zu einem Punkt $P$.
+
+Vektoraddition und -skalierung funktioniert komponentenweise.
+Die Länge eines Vektors ergibt sich durch $\norm{a} = \sqrt{\sum_{i = 1}^n a_i}$.
+Vektoren der Länge $1$ heißen \introduce{Einheitsvektoren}.
+
+\begin{Definition}[Skalarprodukt]
+	Seien $a = \left(a_1 \ldots a_n\right)^T$ und $b = \left(b_1 \ldots b_n\right)^T$ Vektoren.
+	$\dotproduct{a}{b} = a_1b_1 + \ldots + a_nb_n$ ist das \introduce{Skalarprodukt} von $a$ und $b$.
+\end{Definition}
+
+Das Skalarprodukt kann auch als Matrixmultiplikation $a^Tb$ aufgefasst werden.
+Es gelten die folgenden Eigenschaften:
+\begin{enumerate}[label=(\roman*)]
+	\item $\dotproduct{a}{b} = \norm{a} \norm{b} \cdot \cos \phi$.
+	Dabei ist $\phi$ der von $a$ und $b$ eingeschlossene Winkel.
+	\item $\dotproduct{a}{a} = a^2$
+	\item $\dotproduct{a}{b} = \dotproduct{b}{a}$ (\introduce{Symmetrie})
+	\item $\dotproduct{\lambda a + b}{c} = \lambda \dotproduct{a}{c} + \dotproduct{b}{c}$ (\introduce{Linearität})
+\end{enumerate}
+
+\begin{Definition}[Kreuzprodukt]
+	Seien $a = \left(a_1~a_2~a_3\right)^T$ und $b = \left(b_1~b_2~b_3\right)^T$ Vektoren.
+	\[
+		a \times b =
+		\begin{pmatrix}
+			a_1 \\
+			a_2 \\
+			a_3
+		\end{pmatrix}
+		\times
+		\begin{pmatrix}
+			b_1 \\
+			b_2 \\
+			b_3
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			a_2b_3 - a_3b_2 \\
+			a_3b_1 - a_1b_3 \\
+			a_1b_2 - a_2b_1
+		\end{pmatrix}
+		=
+		n \norm{a} \norm{b} \sin \phi
+	\]
+	heißt das \introduce{Kreuzprodukt} von $a$ und $b$.
+	$\norm{n}$ ist $1$ und $n$ steht senkrecht zu der von $a$ und $b$ aufgespannten Ebene.
+	$\phi$ ist wieder der von $a$ und $b$ eingeschlossene Winkel.
+\end{Definition}
+Für das Kreuzprodukt gelten die folgenden Identitäten:
+\begin{enumerate}[label=(\roman*)]
+	\item $\dotproduct{a}{a \times b} = \dotproduct{b}{a \times b} = 0$
+	\item $\dotproduct{a}{b \times c} = \dotproduct{a \times b}{c}$
+	\item $a \times (\lambda b + c) = \lambda(a \times b) + a \times c$
+	\item $a \times (b \times c) = \dotproduct{\dotproduct{a}{c}}{b} - \dotproduct{\dotproduct{a}{b}}{c}$
+	\item $\dotproduct{a \times b}{c \times d} = \dotproduct{a}{c}\dotproduct{b}{d} - \dotproduct{b}{c}\dotproduct{a}{d}$
+\end{enumerate}
+
+\begin{Beispiel}[Anwendung des Kreuzprodukts]
+	Seien $a b, c$ die Eckpunkte eines Dreiecks und $n' = (b - a) \times (c - a)$.
+	Dann ist $n = \frac{n'}{\norm{n'}}$ die Oberflächennormale und der $\frac{1}{2}\norm{n'}$ der orientierte Flächeninhalt des Dreiecks.
+\end{Beispiel}
+
+\section{Parameterdarstellungen}
+Eine \introduce{Gerade} ist durch zwei Punkte $P \neq Q$ definiert.
+\[
+	g(t) = P + t \cdot (Q - P), \quad t \in \mathbb{R}
+\]
+Wählt man $t$ aus $\mathbb{R}_+$, erhält man eine Halbgerade von Punkt $P$ durch den Punkt $Q$.
+Wird $t$ dagegen auf $[0, 1]$ eingeschränkt, erhält man die Strecke zwischen $P$ und $Q$.
+
+Analog ist eine \introduce{Ebene} durch drei nicht kollineare Punkte $P, Q, R$ definiert.
+\[
+	g(s, t) = P + s \cdot (Q - P) + t \cdot (R - P), \quad s, t \in \mathbb{R}
+\]
+Die Vektoren $(Q - P)$ und $(R - P)$ spannen die Ebene auf.
+Wählt man $s$ und $t$ aus $[0, 1]$, erhält man das Parallelogramm zwischen $(Q - P)$ und $(R - P)$.
+
+\section{Koordinatensysteme}
+Ein $n$-dimensionales \introduce{Koordinatensystem} wird durch eine Menge von $n$ linear unabhängigen Basisvektoren $B = \{b_1, \ldots, b_n\}$ definiert.
+Die Basisvektoren müssen nicht gleich lang sein.
+$B$ ist \introduce{orthogonal}, wenn alle Basisvektoren senkrecht zueinander stehen.
+Haben zusätzlich alle Basisvektoren Länge $1$, heißt $B$ \introduce{orthonormal}.
+Die Einheitsvektoren $\{e_1, \ldots, e_n\}$ bilden eine solche Orthonormalbasis.
+
+\section{Baryzentrische Koordinaten}
+\begin{Definition}
+	Seien $P_1, \ldots, P_k$ Punkte des $\mathbb{R}^n$ und $k \leq n + 1$.
+	Wenn ein Punkt $Q$ als Affinkombination ($\lambda_1 + \ldots \lambda_k = 1$)
+	\[
+		Q = \lambda_1 P_1 + \ldots + \lambda_k P_k
+	\]
+	geschrieben werden kann, so bezeichnet man $(\lambda_1, \ldots, \lambda_k)$ als \introduce{baryzentrische Koordinaten} von $Q$ bezüglich $P_1, \ldots, P_k$.
+\end{Definition}
+
+Alle Konvexkombinationen ($\lambda_1 P_1 + \ldots + \lambda_k P_k$) einer Punktmenge $P_1, \ldots, P_k$, bilden die \introduce{konvexe Hülle} der Punktmenge. 
+Da ein Dreieck konvex ist, ist ein Punkt genau dann innerhalb des Dreiecks, wenn all seine baryzentrischen Koordinaten bezüglich der Eckpunkte des Dreiecks nicht negativ sind.
+
+\begin{Beispiel}
+	Sei $P_1, P_2, P_3$ ein Dreieck und $Q$ ein Punkt.
+	Dann gilt für die baryzentrischen Koordinaten $\lambda_1, \lambda_2, \lambda_3$:
+	\[
+		\lambda_1 = \frac{\Delta(Q, P_2, P_3)}{\Delta(P_1, P_2, P_3)} \qquad
+		\lambda_2 = \frac{\Delta(P_1, Q, P_3)}{\Delta(P_1, P_2, P_3)} \qquad
+		\lambda_3 = \frac{\Delta(P_1, P_2, Q)}{\Delta(P_1, P_2, P_3)}
+	\]
+	Dabei ist $\Delta(A, B, C)$ der orientierte Flächeninhalt des Dreiecks $A, B, C$.
+\end{Beispiel}

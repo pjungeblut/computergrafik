@@ -17,16 +17,27 @@
 % Einheiten.
 \usepackage{siunitx}
 
+% Bessere Aufzählungen mit eigenen Labels.
+\usepackage{enumitem}
+
 % Mathe.
+% Umgebeungen werden gemeinsam und pro Kapitel nummeriert.
 \usepackage{amsmath}
 \usepackage{mathtools}
 \usepackage[standard]{ntheorem}
+\theoremstyle{break}\renewtheorem{Definition}{Definition}[chapter]
+\theoremstyle{break}\renewtheorem{Theorem}[Definition]{Satz}
+\theoremstyle{break}\renewtheorem{Beispiel}[Definition]{Beispiel}
 
 % Ein Befehl zur Einführen von Begriffen.
 \newcommand{\introduce}[1]{\textcolor{blue}{#1}}
 
 % Das d am Ende des Integranden.
 \newcommand{\intd}{~\mathrm{d}}
+
+% Notation fürs Skalarprodukt und die Länge eines Vektors.
+\newcommand{\dotproduct}[2]{\langle #1, #2 \rangle}
+\newcommand{\norm}[1]{\vert #1 \vert}
 
 % Ein kleinerer Abstand zwischen dem z und dem B bei z.B.
 \newcommand{\zB}{z.\,B.~}
