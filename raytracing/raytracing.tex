@@ -42,4 +42,28 @@ Ray Tracing besteht aus drei Schritten, die in dieser Reihenfolge ausgeführt we
 	\item \introduce{Ray Intersection} Für jeden Strahl wird das Objekt gefunden, das die Kamera an diesem Pixel sieht.
 	Es ist das Objekt, das diesen Strahl schneidet und dessen Schnittpunkt am nächsten an der Kamera liegt.
 	\item \introduce{Shading} Farbe und Schattierung dieses Objekts an dieser Stelle wird berechnet.
+	Dazu können rekursiv weitere Strahlen erzeugt werden, um \zB reflektierende Oberflächen darzustellen.
 \end{enumerate}
+
+\section{Ray Generation}
+Die virtuelle Kamera ist definiert durch ihr Projektionszentrum $e$ (engl. eye) und einen $up$-Vektor mit $\norm{up} = 1$.
+Sei $z$ der Zielpunkt eines Strahls.
+Definiere dann
+\[
+	w = \frac{(e - z)}{\norm{e - z}} \text{,} \qquad
+	u = up \times w \text {,} \qquad
+	v = w \times u \text{.}
+\]
+Dabei ist $w$ die negative Blickrichtung.
+
+Die Bildebene ist gegeben durch ihren Abstand $d$ zur Kamera, ihren linken und rechten Rand $l$ und $r$ sowie ihren oberen und unteren Rand $b$ und $t$.
+Strahlen von $e$ aus zu einem Punkt $s$ auf der Bildebene sind nun beschrieben durch:
+\[
+	s = \lambda_1 u + \lambda_2 v - dw \qquad \lambda_1 \in [l, r] \quad \lambda_2 \in [b, t] 
+\]
+Typischerweise ist das Sichtfeld symmetrisch, es gilt also $l = -r$ und $t = -b$.
+Das Verhältnis aus der Breite zur Höhe des Bildschirms heißt \introduce{Aspect Ratio}.
+
+\section{Ray Intersection}
+
+\section{Shading}
