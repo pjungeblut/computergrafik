@@ -41,7 +41,7 @@ Ray Tracing besteht aus drei Schritten, die in dieser Reihenfolge ausgeführt we
 	\item \introduce{Ray Generation} Für jeden Pixel wird ein Strahl von der Kamera durch diesen Pixel erzeugt.
 	\item \introduce{Ray Intersection} Für jeden Strahl wird das Objekt gefunden, das die Kamera an diesem Pixel sieht.
 	Es ist das Objekt, das diesen Strahl schneidet und dessen Schnittpunkt am nächsten an der Kamera liegt.
-	\item \introduce{Shading} Farbe und Schattierung dieses Objekts an dieser Stelle wird berechnet.
+	\item \introduce{Beleuchtungsberechnung} Farbe und Schattierung dieses Objekts an dieser Stelle wird berechnet.
 	Dazu können rekursiv weitere Strahlen erzeugt werden, um \zB reflektierende Oberflächen darzustellen.
 \end{enumerate}
 
@@ -130,4 +130,56 @@ Wenn $t < 0$ ist, liegt der Schnittpunkt hinter der Kamera und sollte ignoriert 
 Um einen Schintt zwischen einem Strahl und einem Dreieck zu berechnen, muss zuerst ein Schnittpunkt des Strahl mit der vom Dreieck aufgespannten Ebene gefunden werden.
 Die Koordianten des Schnittpunktes können dann in baryzentrische Koordinaten überführt und auf Positivität überprüft werden.
 
-\section{Shading}
+\section{Beleuchtungsberechnung}
+Beleuchtung ist essentiell für einen dreidimensionalen Eindruck.
+Ein wichtiger Teil der Beleuchtungsberechungen ist die \introduce{Reflexion}.
+Es gibt zwei Extreme.
+Bei der \introduce{spekularen Reflexion} wird das Licht nur anhand eines Strahls reflektiert, wobei Einfallswinkel gleich Ausfallswinkel gilt.
+Dagegen wird das Licht bei der \introduce{diffusen/lambterschen Reflexion} zu gleichen Teilen in alle Richtungen gestreut.
+
+Im Folgenden wird nur Reflexion an der Oberfläche von Objekten behandelt.
+
+\subsection{Bidirectional Reflectance Distribution Function - BRDF}
+Eine \introduce{BRDF (Bidirectional Reflectance Distribution Function)} ist ein radiometrisches Konzept, um die Reflexion an einem Oberflächenpunkt zu beschreiben.
+Sie gibt das Verhältnis von ausgehendem zu einfallendem Licht an einem Oberflächenpunkt an.
+Um Materialien abzubilden, muss die BRDF erst aufwendig an diesem Material gemessen werden.
+
+\subsection{Phong-Beleuchtungsmodell}
+Das \introduce{Phong-Beleuchtungsmodell} ist ein phänomenologisches (also physikalische nicht korrektes) Modell zur Darstellung der Reflexion, anhand von drei Komponenten, die von den Materialparametern $k_a$, $k_d$ und $k_s$ sowie dem Phong-Exponenten $n$ abhängen:
+\begin{itemize}
+	\item \introduce{Ambient}
+	Die indirekte Beleuchtung, also Licht, das von anderen Oberflächen reflektiert wird.
+	Es ergibt sich der Anteil $I_a = k_a \cdot I_L$.
+	\item \introduce{Diffus}
+	Der Anteil der lambertschen Reflexion.
+	Für den diffusen Anteil ergibt sich $I_d = k_d \cdot I_L \cdot \cos \theta = k_d \cdot I_L \cdot \dotproduct{N}{L}$.
+	Dabei ist $I_L$ die Intensität der Lichtquelle, $N$ die normierte Normale am Oberflächenpunkt und $L$ der normierte Vektor zur Lichtquelle.
+	\item \introduce{Spekular}
+	Spekulare Reflexion bzw. perfekte Spiegelung.
+	Die spekulare Reflexion findet ausschließlich in Richtung $R_L$ statt.
+	Der Vektor $R_L$ ist die Spiegelung des Vektors $L$ zur Lichtquelle an der Oberflächennormalen $N$.
+	Sind alle Vektoren normiert, ergibt sich $R_L = 2N \cdot \dotproduct{N}{L} - L$.
+
+	Durch gerichtete Reflexion entstehen Glanzlichter.
+	Die Stärke der Spiegelung fällt für von $R_L$ verschiedene Richtungen stark ab.
+	Der Abfall wird durch $\cos^n \alpha$ modelliert.
+	Der spekulare Anteil ergibt sich damit zu $I_s = k_s \cdot I_L \cdot \cos^n \alpha = k_s \cdot I_L \cdot \dotproduct{R_L}{V}^n$.
+\end{itemize}
+Die Gesamtbeleuchtung ergibt sich durch
+\begin{align*}
+	I &= I_a + I_d + I_s \\
+	  &= k_a \cdot I_L +
+	  	 k_d \cdot I_L \cdot \dotproduct{N}{L} +
+	  	 k_s \cdot I_L \cdot \dotproduct{R_L}{V}^n \text{.}
+	\end{align*}
+Die Reflexionskoeffizienten $k_a$, $k_d$ und $k_s$ sind theoretisch Wellenlängenabhängig und werden deshalb oft für drei Wellenlängen (rot, grün, blau) angegeben.
+
+Diffuse Reflexionen haben meist die Farbe der Oberfläche.
+Spekulare Reflexionen haben meist die Farbe der Oberfläche, wenn es sich um Metalle handelt.
+Ansonsten oft die Farbe der Lichtquelle.
+
+Bei der Berechnung der Beleuchtungen ist man nur an den Richtungen interessiert, für die die Skalarprodukte positiv sind.
+
+Optional kann das Phong-Beleuchtungsmodell um einen Emmisionsterm ersetzt werden.
+
+\subsection{Berechnung der Normalen}
