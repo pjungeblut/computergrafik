@@ -35,7 +35,7 @@ Dann wird die Farbe dieser Pixel ermittelt.
 Beim bildbasierten Rendern werden für jeden Pixel alle an dieser Stelle sichtbaren Objekte bestimmt.
 Daraus wird die Pixelfarbe ermittelt.
 
-\section{Ray Tracing}
+\section{Whitted-Style Ray Tracing}
 Ray Tracing besteht aus drei Schritten, die in dieser Reihenfolge ausgeführt werden.
 \begin{enumerate}
 	\item \introduce{Ray Generation} Für jeden Pixel wird ein Strahl von der Kamera durch diesen Pixel erzeugt.
@@ -182,4 +182,116 @@ Bei der Berechnung der Beleuchtungen ist man nur an den Richtungen interessiert,
 
 Optional kann das Phong-Beleuchtungsmodell um einen Emmisionsterm ersetzt werden.
 
-\subsection{Berechnung der Normalen}
+\subsection{Beleuchtung von Dreiecksnetzen}
+Bei den Beleuchtungsberechnungen im Phong-Beleuchtungsmodell wird an mehreren Stellen die Oberflächennormale verwendet.
+Beim sog. \introduce{Flat Shading} wird dazu die Dreiecksnormale verwendet.
+Nachteil dabei ist, dass die Kanten des Dreiecksnetzes deutlich sichtbar werden.
+Die Illision einer glatten, gekürmmten Oberfläche erreicht man, indem man die \introduce{Vertex-Normalen} betrachtet und über die Dreicksfläche interpoliert werden.
+Die Vertex-Normale berechnet sich als gewichtetes Mittel der Normalen der angrenzenden Dreiecke.
+Die Normale eines Dreiecks kann mit dem Kreuzprodukt bestimmt werden.
+Die so erlangte Vertex-Normale muss normalisiert werden.
+Es darf nicht einfach stattdessen durch die Anzahl der angrenzenden Normalen geteilt werden.
+
+Nun wird aber jede Kante weich gezeichnet.
+Ist der Winkel zwischen zwei benachbarten Dreicken groß, benötigt man mehrere Normalen.
+Aus diesem Grund speichert man bei Dreiecksnetzen in der Regel drei Eckpunkte und drei Normalen.
+
+Die Interpolation der Normalen wird linear und komponentenweise anhand der baryzentrischen Koordinaten durchgeführt.
+Beleuchtungsberechungen mit der interpolierten Normalen nennt man \introduce{Phong-Shading}.
+
+\section{Lichtquellen}
+Es gibt verschiedene Lichtquellen mit unterschiedlichen Eigenschaften.
+Eine \introduce{Punktlichtquelle} ist definiert durch ihre Position und Intensität.
+Die Intensität fällt mit dem Abstandsquadrat.
+
+\introduce{Paralleles Licht} ist definiert durch seine Richtung und die Flussdichte.
+Sonnenlicht ist nahezu parallel.
+
+Bei einem \introduce{Strahler/Spotlight} gibt es einen Lichtkegel.
+Die Intensität bei Winkel $\theta$ beträgt $\cos^n \theta$.
+
+Bei \introduce{Flächenlichtquellen} strahlt eine Fläche.
+Reale Lichtquellen sind (fast) immer Flächenlichtquellen.
+Sie sind der Grund für weiche Schatten.
+
+\section{Schatten, Reflexion, Brechung}
+Betrachtet man ausschließlich die Schnittpunkte mit den Primärstrahlen, wird eine Oberfläche genau dann beleuchtet, wenn sie der Kamera zugewandt ist.
+Dabei wird vernachlässigt, dass andere Objekte der Szene Schatten werfen können.
+Aus diesem Grund werden vom Schnittpunkt aus \introduce{Schattenstrahlen/Sekundärstrahlen} zu allen Lichtquelles ausgesendet und getestet, ob diese ein andere Objekte schneiden.
+Wegen der begrenzten Genauigkeit von Fließkommazahlen, kann es sein, dass der Schattenstrahl das Objekt, an dem er startet, erneut schneidet.
+Bei konvexen Objekten reicht es zu testen, dass nicht das gleiche Objekt erneut geschnitten wird.
+Ansonsten kann der Strahl \zB mit einem kleinen Abstand zum Schnittpunkt gestartet werden.
+
+Neben den Schattenstrahlen gibt es auch noch \introduce{Reflexionsstrahlen} und \introduce{Transmissionsstrahlen}.
+Ein solcher kann genauso behandelt werden, wie ein Sichtstrahl.
+Durch rekursive Verfolgung von Mehrfachreflexion/-transmission, können weitere Sekundärstrahlen entstehen.
+Die für den Strahl berechnete Farbe wird mit einem weiteren Koeffizienten $k_r$/$k_t$ in die Beleuchtung mit eingerechnet.
+
+Die Rekursion kann dabei theoretisch beliebig tief gehen.
+Eine Möglichkeit ist eine feste Rekursionsgrenze.
+Alternativ, kann abgebrochen werden, wenn Beitrag zur Farbe vernachlässigbar klein wird.
+
+Die Reflexion folgt dabei dem Prinzip Einfallswinkel gleich Ausfallswinkel.
+Bei der Brechung muss das Snellsche Gesetz benutzt werden, um die Richtung des Strahls zu ermitteln.
+
+\subsection{Snellsches Brechungsgesetz}
+Das \introduce{Snellsche Brechungsgesetz} beschreibt die Richtungsänderung einer Welle, beim Übergang von einem Medium in eines mit anderer Brechzahl.
+Da sich Licht in verschiedenen Medien unterschiedlich schnell bewegt, definiert sich die \introduce{(reele) Brechzahl} $\eta$ als
+\[
+	\eta = \frac{c_0}{c_\eta} \text{.}
+\]
+Dabei ist $c_0$ die Lichtgeschwindigkeit im Vakuum und $c_\eta$ die Lichtgeschwindigkeit im betrachteten Medium.
+Die Brechzahl ist dabei in der Regel wellenlängenabhängig.
+Unter \introduce{Dispersion} versteht man die Abhöngigkeit der Brechzahl von unterschiedlichen Wellenlängen.
+
+\begin{Theorem}[Snellsches Brechungsgesetzt]
+	Sei $\eta_i$ die Brechzahl das Eingangsmediums und $\eta_t$ die Brechzahl des Mediums in das eingedrungen wird.
+	$\theta_i$ ist der Einfallswinkel, $\theta_t$ der Winkel zum Lot im Medium.
+	\[
+		\eta_i \cdot \sin \theta_i = \eta_t \cdot \sin \theta_t
+	\]
+\end{Theorem}
+
+Die Brechung findet dabei beim Übergang ins optisch dichtere Medium zum Lot hin statt.
+Der \introduce{Fresnel-Effekt} beschreibt die Verteilung der Strahldichte zwischen Reflexion und Transmission.
+Der \introduce{Transmissionsvektor} $T$ ergibt sich durch
+\[
+	T = - \frac{\eta_i}{\eta_t} I +
+	\left(
+		\frac{\eta_i}{\eta_t} \cdot \cos \theta_i -
+		\sqrt{1 - \left(\frac{\eta_i}{\eta_t}\right)^2 \cdot \left(1 - \cos^2 \theta_i\right)}
+	\right)N \text{.}
+\]
+
+\section{Anti-Aliasing}
+Unter \introduce{Anti-Aliasing} versteht man, Aliasingeffektie zu reduzieren.
+Als Technik dafür bietet sich das Überabtasten (Supersampling).
+Beim \introduce{uniformen Supersampling} werden gleichmäßig mehrere Samples pro Pixel genommen.
+Dabei muss der Abstand zwischen den Samples immer gleich sein.
+
+Beim \introduce{adaptiven Supersampling} unterteilt man einen Pixel in Samples, wenn die Differenz der Farbe zum Nachbarpixel zu groß ist.
+Dieses Verfahren kann rekursiv fortgesetzt werden.
+Adaptives Supersampling wird heute kaum noch verwendet.
+
+Auch \introduce{stochastisches Sampling} ist möglich.
+Dabei werden mehrere Samples pro Pixel an zufälligen Stellen gemacht.
+Beim \introduce{Stratified Sampling} wird der Pixel zuerst in ein Gitter unterteilt, dann wird in jeder Zelle an einer zufälligen Stelle abgetastet.
+
+Nicht-uniformes Abtasten veringert das Aliasing aber erhöht das Rauschen.
+Rauschen wird jedoch vom menschlichen Auge als weit weniger störend empfunden.
+
+\section{Distributed Ray Tracing}
+Beim Whitted-Style ray Tracing sehen die Bilder oft zu perfekt aus:
+\begin{itemize}
+	\item Perfekte Spiegelung und Reflexion.
+	\item Keine weichen Schattenkanten.
+	\item Unendliche Schärfentiefe.
+	\item Keine Bewegungsunschärfe.
+\end{itemize}
+Beim \introduce{Distributed Ray Tracing} werden $n$ Schattenstrahlen zu zufälligen Punkten auf der Lichtquelle geschickt.
+Da reale Lichtquellen endliche Ausdehnung haben, führt dies zu weichen Schatten.
+
+Für Bewegungunschärfe können die $n$ Strahlen zu leicht unterschiedlichen Zeiten verschickt werden.
+Dies simuliert die Belichtungszeit bei realen Kameras.
+
+Für Schärfentiefe müssen die $n$ Strahlen durch eine simulerte Linse gebrochen werden.
