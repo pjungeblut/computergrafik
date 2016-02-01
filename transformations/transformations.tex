@@ -191,3 +191,99 @@ Eine Matrix zu invertieren, ist im Allgemeinen kompliziert, sodass zusätzliche 
 Nicht alle Transformationen sind aber überhaupt invertierbar.
 Können obige Regeln nicht angewendet werden, muss numerisch invertiert werden.
 Dies ist vergleichsweise aufwendig.
+
+\section{Affine Abbildungen}
+\introduce{Affine Abbildungen} sind eine Kombination aus einer linearen Abbildung und einer Translation.
+Dabei werden Geraden auf Geraden abgebildet und Parallelen bleiben parallel.
+Sie sind teilverhältnistreu aber nicht winkelerhaltend.
+
+\subsection{Homogene Koordinaten}
+Der euklidische/affine Raum wird um sog. \introduce{Fernpunkte} erweitert.
+Parallele Geraden in einem affinen Raum schneiden sich nicht.
+In einer Projektion jedoch schon.
+Geraden besitzen aber eine Richtung, diese Richtung ergänzt man in \introduce{homogenen Koordinaten}.
+
+Die Menge aller Geraden durch den Ursprung im $\mathbb{R}^3$ nennt man den \introduce{reellen projektiven Raum $P(\mathbb{R}^3)$}.
+Ein Vektor $v \in \mathbb{R}^3$ definiert eine Gerade mit Dimension 2.
+
+Der $\mathbb{R}^2$ kann mit dem homogenen Koordinaten in den $\mathbb{R}^3$ eingebettet werden.
+\begin{itemize}
+  \item Punkte:
+  \[
+    (x, y)_{2D} \to (x, y, 1)_h \equiv
+    \left\{(x', y', w) \mid \left(\frac{x'}{w}, \frac{y'}{w}\right) = (x, y)\right\}
+  \]
+  \item Richtungen:
+  \[
+    (x, y)_{2D} \to (x, y, 0)_h
+  \]
+\end{itemize}
+Der $\mathbb{R}^3$ enthält also alle Punkte und Richtungen des $\mathbb{R}^2$ ohne zwischen diesen zu unterscheiden.
+
+\subsection{Affine Abbildungen mit homogenen Koordinaten}
+Bisher haben wir affine Abbildungen wie folgt betrachtet:
+\[
+  x \mapsto Ax + b =
+  \begin{pmatrix}
+    a_{11} & a_{12} \\
+    a_{21} & a_{22}
+  \end{pmatrix}
+  \begin{pmatrix}
+    x_1 \\
+    x_2
+  \end{pmatrix}
+  +
+  \begin{pmatrix}
+    b_1 \\
+    b_2
+  \end{pmatrix}
+\]
+Wenn $b_1 \neq 0$ oder $_2 \neq 0$, ist sie also nicht linear.
+Mit homogenen Koordinaten kann die selbe Abbildung wie folgt beschrieben werden:
+\begin{align*}
+  x =
+  \begin{pmatrix}
+    x_1 \\
+    x_2
+  \end{pmatrix}
+  &\mapsto
+  \begin{pmatrix}
+    x_1 \\
+    x_2 \\
+    1
+  \end{pmatrix}_h \\
+  &\mapsto
+  \begin{pmatrix}
+    a_{11} & a_{12} & b_1 \\
+    a_{21} & a_{22} & b_2 \\
+    0      & 0      & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x_1 \\
+    x_2 \\
+    1
+  \end{pmatrix}_h
+  =
+  \begin{pmatrix}
+    a_{11}x_1 + a_{21}x_2 + b_1 \\
+    a_{21}x_1 + a_{22}x_2 + b_2 \\
+    1
+  \end{pmatrix}_h \\
+  &\mapsto
+  \begin{pmatrix}
+    a_{11}x_1 + a_{21}x_2 + b_1 \\
+    a_{21}x_1 + a_{22}x_2 + b_2
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    a_{11}x_1 + a_{12}x_2 \\
+    a_{21}x_1 + a_{22}x_2
+  \end{pmatrix}
+  +
+  \begin{pmatrix}
+    b_1 \\
+    b_2
+  \end{pmatrix}
+  =
+  Ax + b
+\end{align*}
