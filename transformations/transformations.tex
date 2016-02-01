@@ -287,3 +287,61 @@ Mit homogenen Koordinaten kann die selbe Abbildung wie folgt beschrieben werden:
   =
   Ax + b
 \end{align*}
+
+\begin{Beispiel}
+  Rotation in 2D um die z-Achse durch den Punkt $c = (c_x, c_y)$ um Winkel $\phi$
+  \[
+    \begin{pmatrix}
+      1 & 0 & c_x \\
+      0 & 1 & c_y \\
+      0 & 0 & 1
+    \end{pmatrix}
+    \cdot
+    \begin{pmatrix}
+      \cos \phi & -\sin \phi & 0 \\
+      \sin \phi & \cos \phi  & 0 \\
+      0         &            & 1
+    \end{pmatrix}
+    \cdot
+    \begin{pmatrix}
+      1 & 0 & -c_x \\
+      0 & 1 & -c_y \\
+      0 & 0 & 1
+    \end{pmatrix}
+  \]
+\end{Beispiel}
+
+\section{3D Transformationen in homogenen Koordinaten}
+\begin{align*}
+  \mathrm{scale}(s_x, s_y, s_z) &=
+  \begin{pmatrix}
+    s_x & 0   & 0   & 0 \\
+    0   & s_y & 0   & 0 \\
+    0   & 0   & s_z & 0 \\
+    0   & 0   & 0   & 1
+  \end{pmatrix}\
+  &
+  \mathrm{shear}_{z}(d_x, d_y) &=
+  \begin{pmatrix}
+    1 & 0 & d_x & 0 \\
+    0 & 1 & d_y & 0 \\
+    0 & 0 & 1   & 0 \\
+    0 & 0 & 0   & 1
+  \end{pmatrix} \\
+  \mathrm{rotate}_x(\phi) &=
+  \begin{pmatrix}
+    1 & 0         & 0          & 0 \\
+    0 & \cos \phi & -\sin \phi & 0 \\
+    0 & \sin \phi & \cos \phi  & 0 \\
+    0 & 0         & 0          & 1
+  \end{pmatrix}
+  &
+  \mathrm{translate}(d_x, d_y, d_z) &=
+  \begin{pmatrix}
+    1 & 0 & 0 & d_x \\
+    0 & 1 & 0 & d_y \\
+    0 & 0 & 1 & d_z \\
+    0 & 0 & 0 & 1
+  \end{pmatrix}
+\end{align*}
+
