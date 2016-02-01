@@ -6,3 +6,4 @@ Ein inoffizielles/unvollständiges Skript zur Vorlesung Computergrafik am KIT im
 1. **Bilder, Farbe, Perzeption** Ein Überblick über die Speicherung von Bildern, Farbräumen und die menschliche Farbwahrnehmung.
 2. **Analytische Geometrie** Analytische Geometrie zur Schnittpunktberechnung.
 3. **Ray Tracing** Einführung in das Ray Tracing.
+4. **Transformationen`** Lineare, affine und projektive Abbildungen. Homogene Koordinaten.
