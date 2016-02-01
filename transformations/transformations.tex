@@ -1,0 +1,177 @@
+\chapter{Transformationen und homogene Koordinaten}
+
+\section{Transformationsgruppen}
+\begin{itemize}
+  \item \introduce{Euklidische Transformationen} erhalten Abstände und Inhaltsgrößen (Flächeninhalt, Volumen).
+  Zu ihnen zählen die Translation, die Identität sowie die Rotation.
+  \item \introduce{Ähnlichkeitsabbildungen} erhalten Winkel.
+  Alle euklidischen Transformationen sind Ähnlichkeitsabbildungen.
+  Außerdem gehören isotrope Skalierungen in diese Klasse.
+  \item \introduce{Lineare Abbildungen} enthalten alle Skalierungen, Rotationen,  Spiegelungen und Scherungen.
+  Sie sind \introduce{additiv}, $T(p + q) = T(p) + T(q)$, und \introduce{homogen}, $T(\lambda p) = \lambda T(p)$.
+  \item \introduce{Affine Abbildungen} enthalten die linearen Abbildungen sowie Translationen.
+  Parallele Linien bleiben bei affinen Abbildungen erhalten.
+  Weiter sind affine Abbildungen \introduce{teilverhältnistreu}.
+  \introduce{Projektive Abbildungen} enthalten alle affinen Abbildungen.
+  Die einzige Forderung ist jedoch, dass Geraden auf Geraden abgebildet werden.
+\end{itemize}
+
+\section{2D Transformationen}
+
+Transformationen lassen sich durch Matrizen darstellen.
+Dies erlaubt eine leichte Hintereinanderausführung.
+Dazu müssen nur die einzelnen Transformationsmatrizen multipliziert werden.
+
+\subsection{Skalierung}
+Eine \introduce{Skalierung} ändert Längen und Winkel (nur bei nicht isotropen Skalierungen, $s_x \neq s_y$).
+\[
+  \mathrm{scale}(s_x, s_y) =
+  \begin{pmatrix}
+    s_x & 0 \\
+    0   & s_y
+  \end{pmatrix}
+\]
+
+\subsection{Scherung (Transvektion)}
+Unter einer \introduce{Scherung} versteht man die Verschiebung entlang einer Achse.
+Flächeninhalte bleiben daher erhalten.
+Es kann entlang beliebiger Achsen geschert werden.
+\[
+  \mathrm{shear}_x(s) =
+  \begin{pmatrix}
+    1 & s \\
+    0 & 1
+  \end{pmatrix}
+  \qquad
+  \mathrm{shear}_y(s) =
+  \begin{pmatrix}
+    1 & 0 \\
+    s & 1
+  \end{pmatrix}
+\]
+
+\subsection{Spiegelung}
+\introduce{Spiegelungen} an einer Koordinatenachse sind negative Skalierungen.
+Es kann entlang beliebiger Achsen gespiegelt werden.
+\[
+  \mathrm{reflect}_x =
+  \begin{pmatrix}
+    -1 & 0 \\
+    0  & 1
+  \end{pmatrix}
+  \qquad
+  \mathrm{reflect}_y =
+  \begin{pmatrix}
+    1 & 0 \\
+    0 & -1
+  \end{pmatrix}
+\]
+
+\subsection{Rotation}
+Eine \introduce{Rotation} beschreibt eine Drehung um einen Winkel $\phi$.
+\[
+  \mathrm{rotate}(\phi)
+  \begin{pmatrix}
+    \cos \phi & -\sin \phi \\
+    \sin \phi & \cos \phi
+  \end{pmatrix}
+\]
+
+\section{3D Transformationen}
+
+\subsection{Rotation}
+Die folgenden drei Matrizen drehen um die x-, y- und z-Achse.
+\begin{align*}
+  \mathrm{R}_x(\phi) &=
+  \begin{pmatrix}
+    1 & 0         & 0 \\
+    0 & \cos \phi & -\sin \phi \\
+    0 & \sin \phi & \cos \phi
+  \end{pmatrix}
+  \qquad
+  \mathrm{R}_y(\phi) =
+  \begin{pmatrix}
+    \cos \phi  & 0 & \sin \phi \\
+    0          & 1 & 0 \\
+    -\sin \phi & 0 & \cos \phi
+  \end{pmatrix} \\
+  \mathrm{R}_z(\phi) &=
+  \begin{pmatrix}
+    \cos \phi  & -\sin \phi & 0 \\
+    \sin \phi  & \cos \phi  & 0 \\
+    0          & 0          & 1
+  \end{pmatrix}
+\end{align*}
+Allgemein werden Rotationen durch \introduce{orthogonale Matrizen} beschrieben.
+Sie sind orientierungserhaltend und ihre Zeilen- bzw. Spaltenvektoren sind paarweise orthonormal.
+Eine quadratische, reele Matrix $M$ ist orhtogonal, wenn $M^T \cdot M = M \cdot M^T = I$ gilt.
+Es gilt also $M^{-1} = M^T$.
+
+Seien $u$, $v$ und $w$ die Basisvektoren eines orthonormalen Koordinatensystems.
+Die Rotationsmatrix
+\[
+  R_{uvw} = 
+  \begin{pmatrix}
+    u_x & u_y & u_z \\
+    v_x & v_y & v_z \\
+    w_x & w_y & w_u
+  \end{pmatrix}
+\]
+bildet die Basisvektoren $u$, $v$ und $w$ auf die kartesischen Achsen ab.
+Umgekehrt bildet $R_{uvw}^T$ die kartesischen Einheitsvektoren auf $u$, $v$ und $w$ ab.
+
+Neben den orthogonalen Matrizen können Rotationen auch über sog. \introduce{Euler-Rotationen} berechnet werden.
+Dabei wird nacheinander um verschiedene Koordinatenachsen rotiert.
+Es gibt zum Beispiel die folgenden drei Möglichkeiten:
+\[
+  R_z \to R_x \to R_z \qquad
+  R_z \to R_y \to R_z \qquad
+  R_x \to R_y \to R_z
+\]
+Sind die Rotationswinkel um die x-, y- und z-Achse $\psi$, $\theta$ und $\phi$, ergibt sich die Rotationsmatrix
+\begin{align*}
+  R &= R_z(\phi) \cdot R_y(\theta) \cdot R_x(\psi) \\
+  &=
+  \begin{pmatrix}
+    \cos\theta\cos\phi &
+    \sin\psi\sin\theta\cos\phi-\cos\psi\sin\phi &
+    \cos\psi\sin\theta\cos\phi+\sin\psi\sin\phi \\
+    \cos\theta\sin\phi &
+    \sin\psi\sin\theta\sin\phi+\cos\psi\cos\phi &
+    \cos\psi\sin\theta\sin\phi-\sin\psi\cos\phi \\
+    -\sin\theta &
+    \sin\psi\cos\theta &
+    \cos\psi\cos\theta
+  \end{pmatrix}
+  \text{.}
+\end{align*}
+Die Winkel $\psi$, $\theta$ und $\phi$ heißen \introduce{Euler-Winkel} und beschreiben zusammen mit Festlegung der Achsen und der Reihenfolge die Orientierung eines Objekts.
+
+Oft will man um eine Achse $d$ und einen Winkel $\phi$ rotieren.
+Dazu wird ein Orthonormalsystem mit $d$ als eine der Achsen benötigt.
+Sei $d = \left(d_x, d_y, d_z\right)$ mit $\norm{d} = 1$.
+Wähle nun \zB
+\[
+  e = \frac{1}{\sqrt{d_y^2+ d_z^2}}\left(0, -d_z, dy\right) \qquad \text{und} \qquad
+  f = d \times e \text{.}
+\]
+Mit der Matrix $M$ werden $d$, $e$ und $f$ auf $x$, $y$ und $z$ abgebildet.
+\[
+  M =
+  \begin{pmatrix}
+    d^T \\
+    e^T \\
+    f^T
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    d_x & d_y & d_z \\
+    e_x & e_y & e_z \\
+    f_x & f_y & f_z
+  \end{pmatrix}
+\]
+Im Koordinatensystem $(d, e, f)$ kann dann mit $R_x(\phi)$ rotiert werden.
+Mit Rücktransformation ergibt sich
+\[
+  R_{d,\phi} = M^{-1} \cdot R_x(\phi) \cdot M
+\]
