@@ -345,3 +345,112 @@ Mit homogenen Koordinaten kann die selbe Abbildung wie folgt beschrieben werden:
   \end{pmatrix}
 \end{align*}
 
+\section{Koordinatensysteme in der Computergrafik}
+Objekte in einer Szene werden in ihrem eigenen \introduce{Objekt-} oder \introduce{Modellkoordinatensystem} beschrieben.
+Die Positionierung im \introduce{Weltkoordinatensystem} erfolgt dann durch Translation, Rotation und Skalierung.
+Danach folgt die transformation ins \introduce{Kamerakoordinatensystem}.
+Beim Ray Tracing geschieht dies implizit.
+
+\subsection{Wechsel zwischen Koordinatensystemen}
+Das globale Weltkordinatensystem hat Ursprung $o$ und Basisvektoren $x$ und $y$.
+Es ist das Bezugssystem für lokale Koordinatensysteme.
+Diese haben einen Ursprung $e$ und Basisvektoren $u$ und $v$.
+Für einen Punkt $P$ gilt:
+\[
+  P = (p_x, p_y) = e + p_uu + p_vv
+\]
+Für den Wechsel zwischen den Koordinatensystemen in homogenen Koordinaten gilt dann:
+\begin{align*}
+  \begin{pmatrix}
+    p_x \\
+    p_y \\
+    1
+  \end{pmatrix}
+  &=
+  \begin{pmatrix}
+    1 & 0 & e_x \\
+    0 & 1 & e_y \\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    u_x & v_x & 0 \\
+    u_y & v_y & 0 \\
+    0   & 0   & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    p_u \\
+    p_v \\
+    1
+  \end{pmatrix} \\
+  \begin{pmatrix}
+    p_u \\
+    p_u \\
+    1
+  \end{pmatrix}
+  &=
+  \begin{pmatrix}
+    u_x & u_y & 0 \\
+    v_x & v_y & 0 \\
+    0   & 0   & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    1 & 0 & -e_x \\
+    0 & 1 & -e_y \\
+    0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    p_x \\
+    p_y \\
+    1
+  \end{pmatrix}
+\end{align*}
+
+\subsection{Kameratransformation}
+Die virtuelle Kamera ist definiert durch ihre Position $e$, die negative Blickrichtung $w$ und den up-Vektor $up$.
+Dann ist $u = up \times w$ und $v = w \times u$.
+Die Vektoren $u$, $v$, $w$ bilden die Basis des Kamerakoordinatensystems.
+Eine Transformation in dieses erleichtert projektive Abbildungen.
+
+\section{Hierarchisches Modellieren}
+Modelltransformationen sind üblicherweise zusammengesetzte Transformationen.
+Bei komplexen Szenen macht es die Modellierung einfacher, wenn mehrere Instanzen von Objekten zu Gruppen zusammengefasst werden und dann die Gruppen transformiert werden.
+Durch diese Zusammenfassung entsteht ein \introduce{Szenengraph}.
+Der Szenengraph ist gerichtet und azyklisch, aber kein Baum, da ein Objekt mehrfach in einer oder mehrerer Gruppen sein kann.
+
+\section{Transformation von Normalen}
+Die Oberflächennormale ist ein Einheitsvektor lokal-senkrecht zur Oberfläche.
+Sie ist wichtig für die Beleuchtungsberechnung.
+Die Normale kann nicht wie Objekte transformiert werden.
+Die liegt daran, dass lineare und affine Transformationen im Allgemeinen nicht winkeltreu sind.
+
+Statt die Normale $n$ zu transformieren, wird die Tangentenebene in homogenen Koordinaten transformiert.
+Der Trick ist, einen Punkt $p$ auf der Tangentenebene $E$ in $p'$ zu transformieren und aus $p'$ die transformierte Normale $n'$ zu berechnen (muss senkrecht auf $p'$ stehen).
+Seien dazu
+\begin{align*}
+  E &= \{(x, y, z, d) \mid n_xx + n_yy + n_zz + d = 0\} \quad &\text{die Tangentenebene in HNF,} \\
+  n &= (n_x, n_y, n_z, d) &\text{die Normale und} \\
+  p &= (x, y, z, 1) \in E &\text{ein Punkt in $E$.}
+\end{align*}
+Weiter sein $M$ die Transformationsmatrix.
+Es gilt mit dem Skalarprodukt in homogenen Koordinaten:
+\[
+  p \in E ~\Longleftrightarrow~ n^Tp = 0
+\]
+Der Punkt $p' = Mp$ liegt in der transformierten Tangentenebene und die transformierte Normale $n'$ soll senkrecht darauf stehen.
+\begin{align*}
+  0 &= n^Tp \\
+  &= n^T(M^{-1}M)p \\
+  &= \underbrace{(n^TM^{-1})}_{n'^T} \cdot \underbrace{(Mp)}_{p'}
+\end{align*}
+Aus $n'^T = (n^TM^{-1})$ folgt dann:
+\[
+  n' = (n^TM^{-1})^T = (M^{-1})^Tn
+\]
+Beachte, dass nur die Richtung von $n'$ korrekt ist, $n'$ muss noch normiert werden.
+Zur Steigerung der Effizienz können die folgenden beiden Sonderfälle betrachtet werden:
+\begin{itemize}
+  \item Bei Ähnlichkeitsabbildungen (euklidischen Transformationen und Skalierungen) ist $(M^{-1})^T = \lambda M$.
+  In diesem Fall gilt also $n' = Mn$.
+  \item Bei einer orthogonalen Matrix $M$ gilt $(M^{-1})^T = M$.
+  In diesem Fall gilt also ebenfalls $n' = Mn$.
+\end{itemize}
